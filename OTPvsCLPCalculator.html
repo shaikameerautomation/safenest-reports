@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SafeNest — OTP vs CLP Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-padding-top:80px;}
+  body{background:#0f0f0f;font-family:'DM Sans',sans-serif;color:#eee;min-height:100vh;}
+  input,select{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background-color:#222222!important;caret-color:#C9A84C;}
+  input:-webkit-autofill,input:-webkit-autofill:focus{-webkit-text-fill-color:#ffffff!important;-webkit-box-shadow:0 0 0 1000px #222222 inset!important;}
+  input::placeholder{color:#555555!important;-webkit-text-fill-color:#555555!important;opacity:1;font-style:italic;}
+  input:focus,select:focus{border-color:#C9A84C!important;outline:none;box-shadow:0 0 0 2px #C9A84C33;}
+  select option{background:#222;color:#fff;}
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const G="#C9A84C", s1="#181818", s2="#222", s3="#2a2a2a";
+const bd="#363636", txt="#eee", dim="#666", muted="#aaa";
+const green="#2ECC71", amber="#E67E22", red="#E74C3C", blue="#5AAEFF";
+
+const INP={
+  width:"100%", background:"#222", border:`1.5px solid ${bd}`,
+  borderRadius:9, padding:"12px 14px", color:"#fff", fontSize:16,
+  fontFamily:"inherit", display:"block", outline:"none", marginBottom:2,
+};
+
+function L({c, hint}){
+  return(
+    <div style={{marginTop:14, marginBottom:hint?2:6}}>
+      <div style={{fontSize:14, color:muted, fontWeight:600}}>{c}</div>
+      {hint&&<div style={{fontSize:12, color:dim, marginBottom:4, lineHeight:1.5}}>{hint}</div>}
+    </div>
+  );
+}
+function Divider({label, color}){
+  return(
+    <div style={{marginTop:22, marginBottom:8, paddingTop:18, borderTop:`1px solid ${s3}`}}>
+      <div style={{fontSize:12, color:color||G, fontWeight:700, letterSpacing:1.2, textTransform:"uppercase"}}>{label}</div>
+    </div>
+  );
+}
+function NIn({label, hint, val, set, ph, unit}){
+  return(
+    <div>
+      <L c={label+(unit?` (${unit})`:"")} hint={hint}/>
+      <input style={INP} type="number" value={val} onChange={e=>set(e.target.value)} placeholder={ph}/>
+    </div>
+  );
+}
+function TIn({label, hint, val, set, ph}){
+  return(
+    <div>
+      <L c={label} hint={hint}/>
+      <input style={INP} type="text" value={val} onChange={e=>set(e.target.value)} placeholder={ph}/>
+    </div>
+  );
+}
+function RRow({label, value, hint, color, bold}){
+  return(
+    <div style={{display:"flex", justifyContent:"space-between", alignItems:"flex-start",
+      padding:"9px 0", borderBottom:`1px solid ${s3}`, gap:10}}>
+      <div style={{flex:1}}>
+        <div style={{fontSize:bold?15:14, color:bold?txt:muted, fontWeight:bold?600:400, lineHeight:1.3}}>{label}</div>
+        {hint&&<div style={{fontSize:12, color:dim, marginTop:2, lineHeight:1.4}}>{hint}</div>}
+      </div>
+      <div style={{fontSize:bold?17:15, fontWeight:bold?700:500, color:color||txt,
+        flexShrink:0, textAlign:"right", minWidth:80}}>{value}</div>
+    </div>
+  );
+}
+
+const BLANK = {
+  name:"", clpPrice:"", downPct:20, otpDiscount:"",
+  handover:"", rate:8.5, oppRate:7, delay:0,
+};
+
+function compute(p){
+  const clpPrice  = parseFloat(p.clpPrice)    || 0;
+  const downPct   = (parseFloat(p.downPct)    || 0) / 100;
+  const disc      = (parseFloat(p.otpDiscount)|| 0) / 100;
+  const h         = parseFloat(p.handover)    || 0;
+  const rate      = (parseFloat(p.rate)       || 0) / 100;
+  const opp       = (parseFloat(p.oppRate)    || 0) / 100;
+  const delay     = parseFloat(p.delay)       || 0;
+
+  const otpPrice      = clpPrice * (1 - disc);
+  const priceSaving   = clpPrice * disc;
+  const clpDown       = clpPrice * downPct;
+  const clpRemaining  = clpPrice - clpDown;
+  const otpDown       = otpPrice * downPct;
+  const otpRemaining  = otpPrice - otpDown;
+  const clpPreEmi     = clpRemaining * 0.55 * rate * (h / 12);
+  const clpDelayEmi   = clpRemaining * 0.90 * rate * (delay / 12);
+  const clpTotalL     = (clpPrice * 100) + (clpPreEmi * 100) + (clpDelayEmi * 100);
+  const otpOppCost    = otpRemaining * opp * (h / 12);
+  const otpDelayOpp   = otpRemaining * opp * (delay / 12);
+  const otpTotalL     = (otpPrice * 100) + (otpOppCost * 100) + (otpDelayOpp * 100);
+  const netAdvantage  = clpTotalL - otpTotalL;
+  const winner        = netAdvantage >= 0 ? "OTP" : "CLP";
+  const oppFactor     = 1 + (1 - downPct) * opp * ((h + delay) / 12);
+  const beDisc        = Math.max(0, (1 - clpTotalL / (clpPrice * 100 * oppFactor)) * 100);
+
+  return{
+    name: p.name || "This Project",
+    clpPrice, otpPrice, priceSaving,
+    clpDown, clpRemaining, otpDown, otpRemaining,
+    clpPreEmiL:   clpPreEmi    * 100,
+    clpDelayL:    clpDelayEmi  * 100,
+    clpTotalL,
+    otpOppCostL:  otpOppCost   * 100,
+    otpDelayL:    otpDelayOpp  * 100,
+    otpTotalL,
+    priceSavingL: priceSaving  * 100,
+    netAdvantage, winner,
+    breakEvenDisc: beDisc.toFixed(1),
+    hasDelay: delay > 0, delay, h,
+    disc:    parseFloat(p.otpDiscount) || 0,
+    oppRate: parseFloat(p.oppRate)     || 7,
+    rate:    parseFloat(p.rate)        || 8.5,
+    downPct: parseFloat(p.downPct)     || 20,
+  };
+}
+
+const fL = n => `₹${Math.abs(n).toFixed(1)}L`;
+const fC = n => `₹${Math.abs(n).toFixed(2)} Cr`;
+
+function PaymentCard({isCLP, r, isWinner}){
+  const tag  = isCLP ? "CLP" : "OTP";
+  const tCol = isCLP ? blue  : "#5AFF8A";
+  const tBg  = isCLP ? "#0A1A2E" : "#0A2A0A";
+  const cost = isCLP ? r.clpTotalL : r.otpTotalL;
+  const emiColor = isCLP ? amber : blue;
+
+  return(
+    <div style={{flex:1, minWidth:280, background:s1, border:`2px solid ${isWinner?G:bd}`,
+      borderRadius:12, padding:20, position:"relative"}}>
+      {isWinner&&(
+        <div style={{position:"absolute", top:-13, left:"50%", transform:"translateX(-50%)",
+          background:G, color:"#000", fontSize:12, fontWeight:700,
+          padding:"3px 16px", borderRadius:20, whiteSpace:"nowrap"}}>✓ CHEAPER OPTION</div>
+      )}
+      <div style={{display:"flex", alignItems:"center", gap:10, marginTop:isWinner?10:0, marginBottom:16}}>
+        <div style={{background:tBg, borderRadius:6, padding:"4px 12px",
+          fontSize:13, fontWeight:700, color:tCol}}>{tag}</div>
+        <div style={{fontSize:14, color:muted}}>
+          {isCLP ? "Construction Linked Plan" : "One Time Payment"}
+        </div>
+      </div>
+      <RRow label={isCLP ? "Full CLP price" : `OTP price after ${r.disc}% discount`}
+        value={fC(isCLP ? r.clpPrice : r.otpPrice)} bold
+        hint={!isCLP ? `₹${r.priceSavingL.toFixed(1)}L saved vs CLP` : undefined}/>
+      {!isCLP&&<RRow label="Full price saving" value={`− ${fL(r.priceSavingL)}`} color={green}/>}
+      <div style={{margin:"14px 0 6px"}}>
+        <div style={{fontSize:12, color:muted, fontWeight:700, textTransform:"uppercase", letterSpacing:1}}>Down Payment</div>
+        <div style={{fontSize:12, color:dim, marginTop:2}}>
+          {isCLP?`${r.downPct}% of CLP price`:`${r.downPct}% of OTP (discounted) price`}
+        </div>
+      </div>
+      <RRow label="Down payment" value={fC(isCLP ? r.clpDown : r.otpDown)}/>
+      <RRow label={isCLP ? "Remaining → bank loan" : "Remaining → own funds upfront"}
+        value={fC(isCLP ? r.clpRemaining : r.otpRemaining)}
+        hint={isCLP ? "Released in stages" : "Paid upfront from own savings"}/>
+      <div style={{margin:"14px 0 6px"}}>
+        <div style={{fontSize:12, color:emiColor, fontWeight:700, textTransform:"uppercase", letterSpacing:1}}>
+          {isCLP ? "Bank Interest Cost" : "Opportunity Cost"}
+        </div>
+        <div style={{fontSize:12, color:dim, marginTop:2}}>
+          {isCLP?"Interest paid to bank before possession":"Return given up by locking funds with builder"}
+        </div>
+      </div>
+      <RRow label={isCLP ? "Pre-EMI (55% avg staged release)" : "Opportunity cost on own funds"}
+        value={`+ ${fL(isCLP ? r.clpPreEmiL : r.otpOppCostL)}`} color={emiColor} bold
+        hint={isCLP
+          ? `₹${r.clpRemaining.toFixed(2)}Cr × 55% × ${r.rate}% × ${r.h} months`
+          : `₹${r.otpRemaining.toFixed(2)}Cr × ${r.oppRate}% × ${r.h} months`}/>
+      {r.hasDelay&&(
+        <>
+          <div style={{margin:"14px 0 6px"}}>
+            <div style={{fontSize:12, color:red, fontWeight:700, textTransform:"uppercase", letterSpacing:1}}>Delay Cost</div>
+          </div>
+          <RRow label={isCLP?"Interest on 90% of loan during delay":"Opportunity cost during delay"}
+            value={`+ ${fL(isCLP ? r.clpDelayL : r.otpDelayL)}`} color={red} bold/>
+        </>
+      )}
+      <div style={{marginTop:18, paddingTop:14, borderTop:`2px solid ${bd}`,
+        display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+        <div>
+          <div style={{fontSize:15, fontWeight:600, color:isWinner?green:txt}}>Total Economic Cost</div>
+          <div style={{fontSize:12, color:dim, marginTop:2}}>Price + all holding costs</div>
+        </div>
+        <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:36,
+          fontWeight:600, color:isWinner?green:txt}}>{fL(cost)}</div>
+      </div>
+    </div>
+  );
+}
+
+function CostBar({r}){
+  const max = Math.max(r.clpTotalL, r.otpTotalL, 1);
+  return(
+    <div style={{background:s1, border:`1.5px solid ${bd}`, borderRadius:12, padding:22, marginBottom:20}}>
+      <div style={{fontSize:13, color:dim, fontWeight:600, textTransform:"uppercase",
+        letterSpacing:1, marginBottom:18}}>Which is actually cheaper?</div>
+      {[
+        {label:"CLP — Construction Linked", cost:r.clpTotalL, win:r.winner==="CLP"},
+        {label:"OTP — One Time Payment",    cost:r.otpTotalL, win:r.winner==="OTP"},
+      ].map(({label,cost,win},i)=>(
+        <div key={i} style={{marginBottom:16}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:8}}>
+            <span style={{fontSize:15, fontWeight:600, color:win?G:txt}}>{label}</span>
+            <span style={{fontFamily:"'Cormorant Garamond',serif", fontSize:26,
+              fontWeight:600, color:win?green:txt}}>{fL(cost)}</span>
+          </div>
+          <div style={{background:s3, borderRadius:6, height:26, overflow:"hidden"}}>
+            <div style={{height:"100%", borderRadius:6, width:`${(cost/max)*100}%`,
+              background:win?`linear-gradient(90deg,${green},${green}88)`:`linear-gradient(90deg,${red},${red}66)`,
+              display:"flex", alignItems:"center", paddingLeft:10, minWidth:win?"110px":"0"}}>
+              {win&&<span style={{fontSize:13, fontWeight:700, color:"#fff", whiteSpace:"nowrap"}}>✓ Lower cost</span>}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function NetAnalysis({r}){
+  const otpWins = r.winner === "OTP";
+  const extraCost = Math.max(0, (r.otpOppCostL + r.otpDelayL) - (r.clpPreEmiL + r.clpDelayL));
+  return(
+    <div style={{background:s1, border:`1.5px solid ${bd}`, borderRadius:12, padding:22, marginBottom:20}}>
+      <div style={{fontSize:13, color:dim, fontWeight:700, textTransform:"uppercase",
+        letterSpacing:1, marginBottom:18}}>Net Analysis</div>
+      <div style={{display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:14, marginBottom:20}}>
+        <div style={{background:"#0A2A0A", borderRadius:10, padding:14, textAlign:"center"}}>
+          <div style={{fontSize:12, color:"#5AFF8A", fontWeight:600, marginBottom:6}}>OTP Price Saving</div>
+          <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:26, fontWeight:600, color:"#5AFF8A"}}>
+            {fL(r.priceSavingL)}</div>
+          <div style={{fontSize:12, color:dim, marginTop:4}}>{r.disc}% on full CLP price</div>
+        </div>
+        <div style={{background:"#2A1A0A", borderRadius:10, padding:14, textAlign:"center"}}>
+          <div style={{fontSize:12, color:amber, fontWeight:600, marginBottom:6}}>OTP Extra Cost</div>
+          <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:26, fontWeight:600, color:amber}}>
+            {fL(extraCost)}</div>
+          <div style={{fontSize:12, color:dim, marginTop:4}}>Opp cost over bank interest</div>
+        </div>
+        <div style={{background:otpWins?"#0A2A0A":"#2A0A0A", borderRadius:10, padding:14, textAlign:"center"}}>
+          <div style={{fontSize:12, color:otpWins?green:red, fontWeight:600, marginBottom:6}}>Net Advantage</div>
+          <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:26, fontWeight:600, color:otpWins?green:red}}>
+            {otpWins?"+":"-"}{fL(Math.abs(r.netAdvantage))}</div>
+          <div style={{fontSize:12, color:dim, marginTop:4}}>{r.winner} wins</div>
+        </div>
+      </div>
+      <div style={{background:"#111", borderRadius:8, padding:"14px 16px",
+        fontSize:14, color:muted, lineHeight:1.7}}>
+        <span style={{color:G, fontWeight:600}}>Advisor note: </span>
+        {otpWins
+          ?`The ${r.disc}% OTP discount saves ${fL(r.priceSavingL)} on the full price. This exceeds the opportunity cost of locking own funds. OTP is the better financial decision — confirm the discount applies to all-inclusive pricing, not just the base rate.`
+          :`At ${r.disc}%, the OTP discount (${fL(r.priceSavingL)}) does not cover the opportunity cost of locking own funds upfront vs the bank's staged interest. CLP wins. Builder needs to offer ${r.breakEvenDisc}%+ on the full price for OTP to break even.`}
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  // ── READ URL PARAMS TO PRE-FILL FROM D3 REPORT IFRAME
+  const params = (() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      return {
+        name:    p.get("name")     || "",
+        price:   p.get("price")    || "",
+        handover:p.get("handover") || "",
+      };
+    } catch(e){ return {}; }
+  })();
+
+  const [p, setP] = useState({
+    ...BLANK,
+    name:    params.name,
+    clpPrice:params.price,
+    handover:params.handover,
+  });
+  const [result, setResult] = useState(null);
+  const [err, setErr] = useState("");
+  const upd = (k, v) => setP(pr => ({...pr, [k]: v}));
+
+  const run = () => {
+    if(!p.clpPrice)    { setErr("Enter the CLP price first."); return; }
+    if(!p.otpDiscount) { setErr("Enter the OTP discount % offered by the builder."); return; }
+    if(!p.handover)    { setErr("Enter the handover period."); return; }
+    setErr("");
+    setResult(compute(p));
+    setTimeout(() => document.getElementById("res")?.scrollIntoView({behavior:"smooth"}), 100);
+  };
+
+  const clpP   = parseFloat(p.clpPrice)    || 0;
+  const disc   = parseFloat(p.otpDiscount) || 0;
+  const downP  = parseFloat(p.downPct)     || 0;
+  const otpP   = clpP * (1 - disc/100);
+  const showPreview = clpP > 0 && disc > 0 && downP > 0;
+
+  return(
+    <div style={{background:"#0f0f0f", minHeight:"100vh"}}>
+      <div style={{position:"sticky", top:0, zIndex:100, background:"#0f0f0f",
+        borderBottom:`1px solid ${s3}`, padding:"12px 18px"}}>
+        <div style={{display:"flex", alignItems:"center", gap:10}}>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:22, fontWeight:600, color:G}}>
+              OTP vs CLP Calculator
+            </div>
+            <div style={{fontSize:12, color:dim, marginTop:1}}>
+              Is the builder's upfront discount actually worth it?
+            </div>
+          </div>
+          <button onClick={run} style={{background:G, border:"none", borderRadius:8,
+            padding:"10px 20px", color:"#000", fontSize:14, fontWeight:700,
+            fontFamily:"inherit", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0}}>
+            Calculate →
+          </button>
+        </div>
+      </div>
+
+      <div style={{padding:"20px 18px 40px", maxWidth:760, margin:"0 auto"}}>
+        {params.name && (
+          <div style={{background:"#1A1500", border:`1px solid ${G}44`, borderRadius:8,
+            padding:"10px 14px", marginBottom:16, fontSize:13, color:G}}>
+            ✓ Pre-filled for <strong>{params.name}</strong> — enter the OTP discount offered and your savings rate.
+          </div>
+        )}
+
+        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:16}}>
+          <TIn label="Project name" val={p.name} set={v=>upd("name",v)} ph="e.g. IRA Windermere"/>
+          <NIn label="All-inclusive CLP price" unit="₹ Cr"
+            hint="Full CLP price — base + parking + GST + registration"
+            val={p.clpPrice} set={v=>upd("clpPrice",v)} ph="1.85"/>
+        </div>
+
+        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:16}}>
+          <NIn label="OTP discount offered by builder" unit="% on full CLP price"
+            hint="Builder's discount for paying the full amount upfront"
+            val={p.otpDiscount} set={v=>upd("otpDiscount",v)} ph="8"/>
+          <NIn label="Down payment" unit="% of respective price"
+            val={p.downPct} set={v=>upd("downPct",v)} ph="20"/>
+        </div>
+
+        <NIn label="Handover" unit="months from today (incl. grace period)"
+          val={p.handover} set={v=>upd("handover",v)} ph="30"/>
+
+        <Divider label="Interest Rates"/>
+        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:16}}>
+          <NIn label="CLP home loan rate" unit="% p.a."
+            val={p.rate} set={v=>upd("rate",v)} ph="8.5"/>
+          <NIn label="OTP opportunity rate" unit="% p.a."
+            hint="What your own funds would earn in FD or MF instead"
+            val={p.oppRate} set={v=>upd("oppRate",v)} ph="7"/>
+        </div>
+
+        <Divider label="Construction Delay" color={red}/>
+        <div style={{maxWidth:360}}>
+          <NIn label="Expected delay" unit="months"
+            hint="Enter 0 if none."
+            val={p.delay} set={v=>upd("delay",v)} ph="0"/>
+        </div>
+
+        {showPreview&&(
+          <div style={{marginTop:20, background:s1, border:`1px solid ${bd}`,
+            borderRadius:10, padding:"16px"}}>
+            <div style={{fontSize:12, color:G, fontWeight:700, marginBottom:14,
+              textTransform:"uppercase", letterSpacing:1}}>Price breakdown preview</div>
+            <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:12}}>
+              <div>
+                <div style={{fontSize:12, color:blue, fontWeight:600, marginBottom:8}}>CLP Customer</div>
+                <div style={{background:s2, borderRadius:8, padding:"10px 12px", marginBottom:6}}>
+                  <div style={{fontSize:11, color:dim}}>Full price</div>
+                  <div style={{fontSize:16, fontWeight:600, color:txt}}>₹{clpP.toFixed(2)} Cr</div>
+                </div>
+                <div style={{background:s2, borderRadius:8, padding:"10px 12px", marginBottom:6}}>
+                  <div style={{fontSize:11, color:dim}}>Down payment ({downP}%)</div>
+                  <div style={{fontSize:16, fontWeight:600, color:txt}}>₹{(clpP*downP/100).toFixed(2)} Cr</div>
+                </div>
+                <div style={{background:s2, borderRadius:8, padding:"10px 12px"}}>
+                  <div style={{fontSize:11, color:dim}}>Bank loan</div>
+                  <div style={{fontSize:16, fontWeight:600, color:amber}}>₹{(clpP*(1-downP/100)).toFixed(2)} Cr</div>
+                </div>
+              </div>
+              <div>
+                <div style={{fontSize:12, color:"#5AFF8A", fontWeight:600, marginBottom:8}}>OTP Customer</div>
+                <div style={{background:s2, borderRadius:8, padding:"10px 12px", marginBottom:6}}>
+                  <div style={{fontSize:11, color:dim}}>Discounted price (−{disc}%)</div>
+                  <div style={{fontSize:16, fontWeight:600, color:green}}>₹{otpP.toFixed(2)} Cr</div>
+                </div>
+                <div style={{background:s2, borderRadius:8, padding:"10px 12px", marginBottom:6}}>
+                  <div style={{fontSize:11, color:dim}}>Down payment ({downP}%)</div>
+                  <div style={{fontSize:16, fontWeight:600, color:txt}}>₹{(otpP*downP/100).toFixed(2)} Cr</div>
+                </div>
+                <div style={{background:s2, borderRadius:8, padding:"10px 12px"}}>
+                  <div style={{fontSize:11, color:dim}}>Own funds (no bank)</div>
+                  <div style={{fontSize:16, fontWeight:600, color:blue}}>₹{(otpP*(1-downP/100)).toFixed(2)} Cr</div>
+                </div>
+              </div>
+            </div>
+            <div style={{marginTop:12, background:"#1A1500", borderRadius:8,
+              padding:"10px 14px", fontSize:13, color:G}}>
+              Full price saving from OTP discount: <strong>₹{(clpP*disc/100).toFixed(2)} Cr ({disc}% × ₹{clpP.toFixed(2)} Cr)</strong>
+            </div>
+          </div>
+        )}
+
+        {err&&<div style={{marginTop:12, padding:"12px 16px", background:"#2A0A0A",
+          border:`1px solid ${red}`, borderRadius:8, fontSize:14, color:red}}>{err}</div>}
+
+        <button onClick={run} style={{marginTop:24, width:"100%", background:G,
+          border:"none", borderRadius:10, padding:"15px", color:"#000",
+          fontSize:16, fontWeight:700, fontFamily:"inherit", cursor:"pointer"}}>
+          Calculate OTP vs CLP →
+        </button>
+      </div>
+
+      {result&&(
+        <div id="res" style={{padding:"0 18px 48px", maxWidth:1100, margin:"0 auto"}}>
+          <div style={{borderTop:`1px solid ${s3}`, paddingTop:28, marginBottom:24, textAlign:"center"}}>
+            <div style={{fontSize:12, color:dim, letterSpacing:2, textTransform:"uppercase", marginBottom:8}}>
+              Verdict — {result.name}
+            </div>
+            <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:30, fontWeight:600,
+              lineHeight:1.3, color:result.winner==="OTP"?green:amber}}>
+              {result.winner==="OTP"
+                ?`OTP saves ₹${Math.abs(result.netAdvantage).toFixed(1)}L — upfront payment is worth it`
+                :`CLP costs ₹${Math.abs(result.netAdvantage).toFixed(1)}L less — OTP discount not enough`}
+            </div>
+            <div style={{fontSize:14, color:muted, marginTop:8}}>
+              {result.winner==="OTP"
+                ?"Builder discount on full price exceeds opportunity cost of locking own funds"
+                :`Builder needs to offer ${result.breakEvenDisc}%+ on the full price for OTP to break even`}
+            </div>
+          </div>
+
+          <CostBar r={result}/>
+
+          <div style={{display:"flex", gap:16, marginBottom:20, flexWrap:"wrap"}}>
+            <PaymentCard isCLP={true}  r={result} isWinner={result.winner==="CLP"}/>
+            <PaymentCard isCLP={false} r={result} isWinner={result.winner==="OTP"}/>
+          </div>
+
+          <NetAnalysis r={result}/>
+
+          <div style={{fontSize:12, color:dim, textAlign:"center", lineHeight:1.8}}>
+            OTP discount on full CLP price · Down payment at respective prices ·
+            CLP: 55% staged disbursement · Delay: CLP on 90% (bank holds last 10% until OC) ·
+            OTP: no bank loan — opportunity cost on own funds only · Indicative — verify with your bank
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

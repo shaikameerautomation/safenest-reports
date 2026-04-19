@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SafeNest — True Cost Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-padding-top:72px;}
+  body{background:#0f0f0f;font-family:'DM Sans',sans-serif;color:#eee;min-height:100vh;}
+  .sn-header{position:sticky;top:0;z-index:100;background:#0f0f0f;border-bottom:1px solid #2a2a2a;padding:8px 14px;}
+  .sn-header-row{display:flex;align-items:center;gap:6px;width:100%;}
+  .sn-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#C9A84C;white-space:nowrap;flex-shrink:0;}
+  .sn-tab{flex:1;min-width:0;padding:5px 8px;border-radius:7px;cursor:pointer;border:1.5px solid #363636;background:#222;transition:all 0.15s;overflow:hidden;}
+  .sn-tab.active{background:#1A1500;border-color:#C9A84C;}
+  .sn-tab-label{font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#666;white-space:nowrap;}
+  .sn-tab.active .sn-tab-label{color:#C9A84C;}
+  .sn-tab-name{font-size:11px;font-weight:600;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+  .sn-tab.active .sn-tab-name{color:#eee;}
+  .sn-tab-price{font-size:9px;color:#666;white-space:nowrap;}
+  .sn-tab.active .sn-tab-price{color:#C9A84C;}
+  .sn-calc-btn{background:#C9A84C;border:none;border-radius:8px;padding:8px 12px;color:#000;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .sn-calc-btn:hover{background:#E8C96A;}
+  input,select{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background-color:#222!important;caret-color:#C9A84C;}
+  input:-webkit-autofill,input:-webkit-autofill:focus{-webkit-text-fill-color:#ffffff!important;-webkit-box-shadow:0 0 0 1000px #222 inset!important;}
+  input::placeholder{color:#555!important;-webkit-text-fill-color:#555!important;opacity:1;font-style:italic;}
+  input:focus,select:focus{border-color:#C9A84C!important;outline:none;box-shadow:0 0 0 2px #C9A84C33;}
+  select option{background:#222;color:#fff;}
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const G="#C9A84C", s1="#181818", s2="#222", s3="#2a2a2a";
+const bd="#363636", txt="#eee", dim="#666", muted="#aaa";
+const green="#2ECC71", amber="#E67E22", red="#E74C3C";
+
+const INP={
+  width:"100%", background:"#222", border:`1.5px solid ${bd}`,
+  borderRadius:9, padding:"12px 14px", color:"#fff", fontSize:16,
+  fontFamily:"inherit", display:"block", outline:"none", marginBottom:2,
+};
+
+function L({c, hint}){
+  return(
+    <div style={{marginTop:14, marginBottom:hint?2:6}}>
+      <div style={{fontSize:14, color:muted, fontWeight:600}}>{c}</div>
+      {hint&&<div style={{fontSize:12, color:dim, marginBottom:4, lineHeight:1.5}}>{hint}</div>}
+    </div>
+  );
+}
+function Divider({label, color}){
+  return(
+    <div style={{marginTop:22, marginBottom:8, paddingTop:18, borderTop:`1px solid ${s3}`}}>
+      <div style={{fontSize:12, color:color||G, fontWeight:700, letterSpacing:1.2, textTransform:"uppercase"}}>{label}</div>
+    </div>
+  );
+}
+function NIn({label, hint, val, set, ph, unit}){
+  return(
+    <div>
+      <L c={label+(unit?` (${unit})`:"")} hint={hint}/>
+      <input style={INP} type="number" value={val} onChange={e=>set(e.target.value)} placeholder={ph}/>
+    </div>
+  );
+}
+function TIn({label, hint, val, set, ph}){
+  return(
+    <div>
+      <L c={label} hint={hint}/>
+      <input style={INP} type="text" value={val} onChange={e=>set(e.target.value)} placeholder={ph}/>
+    </div>
+  );
+}
+function RRow({label, value, hint, color, bold}){
+  return(
+    <div style={{display:"flex", justifyContent:"space-between", alignItems:"flex-start",
+      padding:"9px 0", borderBottom:`1px solid ${s3}`, gap:10}}>
+      <div style={{flex:1}}>
+        <div style={{fontSize:bold?15:14, color:bold?txt:muted, fontWeight:bold?600:400, lineHeight:1.3}}>{label}</div>
+        {hint&&<div style={{fontSize:12, color:dim, marginTop:2, lineHeight:1.4}}>{hint}</div>}
+      </div>
+      <div style={{fontSize:bold?17:15, fontWeight:bold?700:500, color:color||txt,
+        flexShrink:0, textAlign:"right", minWidth:90}}>{value}</div>
+    </div>
+  );
+}
+
+const BLANK = {
+  name:"", price:"", size:"", luxIndex:"",
+  handover:"", rate:8.5, loanPct:80, disbPct:0,
+  plan:"clp", subM:24, rental:"", growth:5, delay:0,
+};
+
+// ── READ URL PARAMS — used to pre-fill Project A from D3 report iframes
+function getURLParams(){
+  try {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      nameA:    p.get("nameA")     || "",
+      priceA:   p.get("priceA")    || "",
+      sizeA:    p.get("sizeA")     || "",
+      handoverA:p.get("handoverA") || "",
+      rentalA:  p.get("rentalA")   || "",
+    };
+  } catch(e){ return {}; }
+}
+
+function computeProject(p, id){
+  const price   = parseFloat(p.price)    || 0;
+  const size    = parseFloat(p.size)     || 0;
+  const h       = parseFloat(p.handover) || 0;
+  const rate    = (parseFloat(p.rate)    || 0) / 100;
+  const loanPct = (parseFloat(p.loanPct) || 0) / 100;
+  const disbPct = (parseFloat(p.disbPct) || 0) / 100;
+  const rental  = parseFloat(p.rental)   || 0;
+  const growth  = (parseFloat(p.growth)  || 0) / 100;
+  const delay   = parseFloat(p.delay)    || 0;
+  const subM    = parseFloat(p.subM)     || 0;
+
+  const loan    = price * loanPct;
+  const disbAmt = loan * disbPct;
+  const remAmt  = loan * (1 - disbPct);
+
+  let preEmiDisb=0, preEmiRem=0, builderAbs=0;
+  if(p.plan==="subvention"){
+    builderAbs  = loan * rate * 0.5 * (subM / 12);
+    const buyerM = Math.max(0, h - subM);
+    preEmiDisb  = loan * 0.85 * rate * (buyerM / 12);
+  } else {
+    preEmiDisb  = disbAmt * rate * (h / 12);
+    const sf    = p.plan==="time" ? 0.65 : 0.55;
+    preEmiRem   = remAmt * sf * rate * (h / 12);
+  }
+  const totalPreEmi = preEmiDisb + preEmiRem;
+  const delayPreEmi = loan * 0.90 * rate * (delay / 12);
+
+  const possMonth = h + delay;
+  let totalRental = 0;
+  if(rental > 0 && size > 0 && possMonth < 48){
+    const monthlyRent = (rental * size) / 1e5;
+    for(let yr=0; yr<4; yr++){
+      const startM  = possMonth + (yr * 12);
+      const endM    = Math.min(48, startM + 12);
+      const months  = Math.max(0, endM - startM);
+      if(months <= 0) break;
+      totalRental += monthlyRent * Math.pow(1 + growth, yr) * months;
+    }
+  }
+
+  return {
+    id, name: p.name || `Project ${id}`,
+    price, priceL: price*100,
+    loan, loanL: loan*100,
+    preEmiDisbL: preEmiDisb*100, preEmiRemL: preEmiRem*100,
+    totalPreEmiL: totalPreEmi*100,
+    builderAbsL: builderAbs*100,
+    delayL: delayPreEmi*100,
+    totalRental, possMonth,
+    plan:p.plan, subM, luxIndex: parseFloat(p.luxIndex)||0,
+    rate: parseFloat(p.rate)||8.5, delay, h,
+  };
+}
+
+function applyNorm(rA, rB){
+  const liA=rA.luxIndex, liB=rB.luxIndex;
+  let normA=0, normB=0, normPct=0, note="";
+  if(liA>0 && liB>0 && liA!==liB){
+    const higher=Math.max(liA,liB), lower=Math.min(liA,liB);
+    const pctDiff=((higher-lower)/lower)*100;
+    normPct=Math.min(pctDiff*0.5, 15);
+    if(liA<liB){
+      normA=rA.price*(normPct/100)*100;
+      note=`Project A (LI ${liA}) is lower quality than Project B (LI ${liB}). Gap = ${pctDiff.toFixed(1)}%. Adding ${normPct.toFixed(1)}% quality premium to Project A to level the comparison.`;
+    } else {
+      normB=rB.price*(normPct/100)*100;
+      note=`Project B (LI ${liB}) is lower quality than Project A (LI ${liA}). Gap = ${pctDiff.toFixed(1)}%. Adding ${normPct.toFixed(1)}% quality premium to Project B to level the comparison.`;
+    }
+  } else {
+    note="Both projects have the same Luxury Index — no quality adjustment needed.";
+  }
+  const tcA=rA.priceL+normA+rA.totalPreEmiL+rA.delayL-rA.totalRental;
+  const tcB=rB.priceL+normB+rB.totalPreEmiL+rB.delayL-rB.totalRental;
+  return { normA, normB, normPct, note, trueCostA:tcA, trueCostB:tcB, winner:tcA<=tcB?"A":"B" };
+}
+
+const fL = n => `₹${Math.abs(n).toFixed(1)}L`;
+
+function ProjectForm({p, set, id}){
+  const u=(k,v)=>set(pr=>({...pr,[k]:v}));
+  const isSub=p.plan==="subvention";
+  const buyerM=Math.max(0,(parseFloat(p.handover)||0)-(parseFloat(p.subM)||0));
+  const isReady=(parseFloat(p.handover)||0)===0;
+
+  return(
+    <div style={{background:s1, border:`1.5px solid ${bd}`, borderRadius:12, padding:20}}>
+      <div style={{display:"flex", alignItems:"center", gap:10, marginBottom:16,
+        paddingBottom:14, borderBottom:`1px solid ${s3}`}}>
+        <div style={{background:G, color:"#000", borderRadius:6, width:30, height:30,
+          display:"flex", alignItems:"center", justifyContent:"center",
+          fontSize:14, fontWeight:700}}>{id}</div>
+        <div style={{fontSize:16, fontWeight:600, color:G}}>Project {id}</div>
+        {id==="A" && p.name && <div style={{fontSize:12, color:dim, marginLeft:4}}>· pre-filled from report</div>}
+      </div>
+
+      <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:14}}>
+        <TIn label="Project name" val={p.name} set={v=>u("name",v)} ph="e.g. Prestige Verdure"/>
+        <NIn label="All-inclusive price" unit="₹ Cr"
+          hint="Base + parking + GST + registration"
+          val={p.price} set={v=>u("price",v)} ph="1.85"/>
+        <NIn label="Unit size" unit="sft"
+          val={p.size} set={v=>u("size",v)} ph="2100"/>
+        <NIn label="Luxury Index" unit="0–100"
+          hint="Copy from Airtable"
+          val={p.luxIndex} set={v=>u("luxIndex",v)} ph="65"/>
+      </div>
+
+      <NIn label="Handover" unit="months from today (incl. grace)"
+        hint="Enter 0 if ready to move. Even 3 months gets pre-EMI."
+        val={p.handover} set={v=>u("handover",v)} ph="24"/>
+
+      <Divider label="Loan Details"/>
+      <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:14}}>
+        <NIn label="Loan" unit="% of price" val={p.loanPct} set={v=>u("loanPct",v)} ph="80"/>
+        <NIn label="Interest rate" unit="% p.a." val={p.rate} set={v=>u("rate",v)} ph="8.5"/>
+        <NIn label="Loan already disbursed" unit="%"
+          hint="0 at booking. Enter actual % if mid-construction."
+          val={p.disbPct} set={v=>u("disbPct",v)} ph="0"/>
+        <div>
+          <L c="Payment plan"/>
+          <select style={{...INP, cursor:"pointer"}} value={p.plan} onChange={e=>u("plan",e.target.value)}>
+            <option value="clp">Construction Linked (CLP)</option>
+            <option value="time">Time Linked</option>
+            <option value="subvention">Subvention</option>
+          </select>
+        </div>
+      </div>
+
+      {isSub&&(
+        <div style={{background:"#0D1A0D", border:"1.5px solid #2A5A2A",
+          borderRadius:10, padding:16, marginTop:8}}>
+          <div style={{fontSize:13, color:"#5AFF8A", fontWeight:700, marginBottom:8}}>Subvention Details</div>
+          <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:14}}>
+            <NIn label="Builder pays interest for" unit="months"
+              val={p.subM} set={v=>u("subM",v)} ph="24"/>
+            {p.subM&&p.handover&&(
+              <div style={{display:"flex", gap:10, alignItems:"flex-end", marginBottom:2}}>
+                <div style={{flex:1, background:"#0A2A0A", borderRadius:8, padding:"10px", textAlign:"center"}}>
+                  <div style={{fontSize:12, color:"#5AFF8A", fontWeight:600}}>Builder pays</div>
+                  <div style={{fontSize:22, fontWeight:700, color:"#5AFF8A"}}>{p.subM}M</div>
+                </div>
+                <div style={{flex:1, background:"#2A1A0A", borderRadius:8, padding:"10px", textAlign:"center"}}>
+                  <div style={{fontSize:12, color:amber, fontWeight:600}}>You pay</div>
+                  <div style={{fontSize:22, fontWeight:700, color:amber}}>{buyerM}M</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <Divider label="Rental Income" color={green}/>
+      {isReady&&(
+        <div style={{background:"#0A2A0A", border:"1px solid #2A5A2A", borderRadius:8,
+          padding:"10px 14px", marginBottom:8, fontSize:13, color:"#5AFF8A", lineHeight:1.6}}>
+          ✓ Ready to move — earns rental from Day 1. Enter yield to include all 4 years.
+        </div>
+      )}
+      <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:14}}>
+        <NIn label="Rental yield" unit="₹/sft/month"
+          hint="Current market rent in this area"
+          val={p.rental} set={v=>u("rental",v)} ph="20"/>
+        <NIn label="Annual rental growth" unit="%"
+          val={p.growth} set={v=>u("growth",v)} ph="5"/>
+      </div>
+
+      <Divider label="Construction Delay" color={red}/>
+      <div style={{maxWidth:340}}>
+        <NIn label="Expected delay" unit="months"
+          hint="Enter 0 if none. Interest on 90% of loan during delay."
+          val={p.delay} set={v=>u("delay",v)} ph="0"/>
+      </div>
+    </div>
+  );
+}
+
+function NormPanel({norm, rA, rB}){
+  return(
+    <div style={{background:s1, border:`1.5px solid ${bd}`, borderRadius:12, padding:22, marginBottom:20}}>
+      <div style={{fontSize:13, color:G, fontWeight:700, textTransform:"uppercase",
+        letterSpacing:1.2, marginBottom:16}}>Step 1 — Quality Normalisation</div>
+      <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16}}>
+        {[{r:rA,n:norm.normA},{r:rB,n:norm.normB}].map(({r,n},i)=>(
+          <div key={i} style={{background:s2, borderRadius:10, padding:14}}>
+            <div style={{fontSize:12, color:muted, marginBottom:6}}>{r.name} — Project {r.id}</div>
+            <div style={{display:"flex", alignItems:"baseline", gap:6}}>
+              <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:32, fontWeight:600, color:G}}>{r.luxIndex}</div>
+              <div style={{fontSize:13, color:dim}}>/ 100</div>
+            </div>
+            {n>0&&(
+              <div style={{marginTop:8, background:"#1A1500", border:`1px solid ${G}44`,
+                borderRadius:7, padding:"8px 10px"}}>
+                <div style={{fontSize:12, color:amber}}>Quality premium added</div>
+                <div style={{fontSize:16, fontWeight:700, color:amber}}>+ {fL(n)}</div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#111", borderRadius:8, padding:"12px 14px",
+        fontSize:13, color:muted, lineHeight:1.7}}>
+        <span style={{color:G, fontWeight:600}}>Why: </span>{norm.note}
+      </div>
+    </div>
+  );
+}
+
+function CostBar({norm}){
+  const max=Math.max(norm.trueCostA, norm.trueCostB, 1);
+  return(
+    <div style={{background:s1, border:`1.5px solid ${bd}`, borderRadius:12, padding:22, marginBottom:20}}>
+      <div style={{fontSize:13, color:dim, fontWeight:600, textTransform:"uppercase",
+        letterSpacing:1, marginBottom:18}}>Which is actually cheaper?</div>
+      {[{label:"Project A",cost:norm.trueCostA,win:norm.winner==="A"},
+        {label:"Project B",cost:norm.trueCostB,win:norm.winner==="B"}].map(({label,cost,win},i)=>(
+        <div key={i} style={{marginBottom:16}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:8}}>
+            <span style={{fontSize:15, fontWeight:600, color:win?G:txt}}>{label}</span>
+            <span style={{fontFamily:"'Cormorant Garamond',serif", fontSize:26, fontWeight:600, color:win?green:txt}}>{fL(cost)}</span>
+          </div>
+          <div style={{background:s3, borderRadius:6, height:26, overflow:"hidden"}}>
+            <div style={{height:"100%", borderRadius:6, width:`${(cost/max)*100}%`,
+              background:win?`linear-gradient(90deg,${green},${green}88)`:`linear-gradient(90deg,${red},${red}66)`,
+              display:"flex", alignItems:"center", paddingLeft:10, minWidth:win?"110px":"0"}}>
+              {win&&<span style={{fontSize:13, fontWeight:700, color:"#fff", whiteSpace:"nowrap"}}>✓ Lower true cost</span>}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ResultCard({r, norm, isWinner}){
+  const normAmt=r.id==="A"?norm.normA:norm.normB;
+  const trueCost=r.id==="A"?norm.trueCostA:norm.trueCostB;
+  return(
+    <div style={{flex:1, minWidth:280, background:s1, border:`2px solid ${isWinner?G:bd}`,
+      borderRadius:12, padding:20, position:"relative"}}>
+      {isWinner&&(
+        <div style={{position:"absolute", top:-13, left:"50%", transform:"translateX(-50%)",
+          background:G, color:"#000", fontSize:12, fontWeight:700,
+          padding:"3px 16px", borderRadius:20, whiteSpace:"nowrap"}}>✓ CHEAPER</div>
+      )}
+      <div style={{marginTop:isWinner?10:0, marginBottom:16}}>
+        <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:20, fontWeight:600}}>{r.name}</div>
+        <div style={{fontSize:13, color:dim}}>Project {r.id}</div>
+      </div>
+
+      <RRow label="All-inclusive price" value={fL(r.priceL)} bold/>
+      {normAmt>0&&<RRow label="Quality premium added" value={`+ ${fL(normAmt)}`} color={amber}
+        hint={`${norm.normPct.toFixed(1)}% — lower Luxury Index`}/>}
+      <RRow label="Adjusted price" value={fL(r.priceL+normAmt)} bold
+        hint={normAmt>0?"Base + quality premium":"No adjustment needed"}/>
+
+      <div style={{margin:"14px 0 6px"}}>
+        <div style={{fontSize:12, color:amber, fontWeight:700, textTransform:"uppercase", letterSpacing:1}}>Pre-EMI Interest</div>
+        <div style={{fontSize:12, color:dim, marginTop:2}}>
+          {r.h===0?"Ready to move — no pre-EMI":"Interest paid to bank before possession"}
+        </div>
+      </div>
+
+      {r.plan==="subvention"?(
+        <>
+          <RRow label={`Builder absorbs (${r.subM}M)`} value={fL(r.builderAbsL)} color={green} hint="Priced into PSF"/>
+          <RRow label="Your pre-EMI (after subvention)" value={r.totalPreEmiL>0?`+ ${fL(r.totalPreEmiL)}`:"Nil"} color={amber} bold/>
+        </>
+      ):(
+        <>
+          <RRow label="On already-disbursed loan" value={r.preEmiDisbL>0?`+ ${fL(r.preEmiDisbL)}`:"Nil"} color={amber}/>
+          <RRow label="On remaining (staged release)" value={r.preEmiRemL>0?`+ ${fL(r.preEmiRemL)}`:"Nil"} color={amber}/>
+          <RRow label="Total pre-EMI" value={r.totalPreEmiL>0?`+ ${fL(r.totalPreEmiL)}`:"Nil"} bold color={r.totalPreEmiL>0?amber:dim}/>
+        </>
+      )}
+
+      {r.delay>0&&(
+        <>
+          <div style={{margin:"14px 0 6px"}}>
+            <div style={{fontSize:12, color:red, fontWeight:700, textTransform:"uppercase", letterSpacing:1}}>Delay Cost</div>
+          </div>
+          <RRow label={`Interest on 90% of loan (${r.delay}M delay)`}
+            value={`+ ${fL(r.delayL)}`} color={red} bold hint="Bank holds last 10% until OC"/>
+        </>
+      )}
+
+      <div style={{margin:"14px 0 6px"}}>
+        <div style={{fontSize:12, color:green, fontWeight:700, textTransform:"uppercase", letterSpacing:1}}>Rental Income</div>
+        <div style={{fontSize:12, color:dim, marginTop:2}}>
+          {r.possMonth>=48?"Possession after 4 years — no rental in this window"
+            :`Earned over ${Math.max(0,48-r.possMonth)} months from possession`}
+        </div>
+      </div>
+      <RRow label="4-year rental income"
+        value={r.totalRental>0?`− ${fL(r.totalRental)}`:"₹0"}
+        color={r.totalRental>0?green:dim}
+        hint={r.totalRental>0?"Includes annual rental growth":"Enter rental yield to calculate"}/>
+
+      <div style={{marginTop:18, paddingTop:14, borderTop:`2px solid ${bd}`,
+        display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+        <div>
+          <div style={{fontSize:15, fontWeight:600, color:isWinner?green:txt}}>True Cost — 4 Years</div>
+          <div style={{fontSize:12, color:dim}}>Adj. price + pre-EMI + delay − rental</div>
+        </div>
+        <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:38, fontWeight:600, color:isWinner?green:txt}}>
+          {fL(trueCost)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  // ── READ URL PARAMS TO PRE-FILL PROJECT A
+  const params = (() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      return {
+        nameA:    p.get("nameA")     || "",
+        priceA:   p.get("priceA")    || "",
+        sizeA:    p.get("sizeA")     || "",
+        handoverA:p.get("handoverA") || "",
+        rentalA:  p.get("rentalA")   || "",
+      };
+    } catch(e){ return {}; }
+  })();
+
+  const [A,setA]=useState({
+    ...BLANK, id:"A",
+    name:    params.nameA,
+    price:   params.priceA,
+    size:    params.sizeA,
+    handover:params.handoverA,
+    rental:  params.rentalA,
+  });
+  const [B,setB]=useState({...BLANK,id:"B"});
+  const [tab,setTab]=useState("A");
+  const [result,setResult]=useState(null);
+  const [err,setErr]=useState("");
+
+  const run=()=>{
+    if(!A.price||!B.price){setErr("Enter price for both projects.");return;}
+    if(!A.luxIndex||!B.luxIndex){setErr("Enter Luxury Index for both projects.");return;}
+    if(!A.size||!B.size){setErr("Enter unit size (sft) for both projects.");return;}
+    if(!A.rental||!B.rental){setErr("Enter rental yield for both projects — even ready-to-move earns rent from Day 1.");return;}
+    setErr("");
+    const rA=computeProject(A,"A"), rB=computeProject(B,"B");
+    const norm=applyNorm(rA,rB);
+    setResult({rA,rB,norm});
+    setTimeout(()=>document.getElementById("res")?.scrollIntoView({behavior:"smooth"}),100);
+  };
+
+  const saving=result?Math.abs(result.norm.trueCostA-result.norm.trueCostB):0;
+  const winnerName=result?(result.norm.winner==="A"?result.rA.name:result.rB.name):"";
+
+  return(
+    <div style={{background:"#0f0f0f", minHeight:"100vh"}}>
+      <div className="sn-header">
+        <div className="sn-header-row">
+          <div className="sn-title">True Cost</div>
+          {[{id:"A",p:A},{id:"B",p:B}].map(({id,p})=>(
+            <div key={id}
+              className={`sn-tab${tab===id?" active":""}`}
+              onClick={()=>setTab(id)}>
+              <div className="sn-tab-label">{tab===id?`▸ Proj ${id}`:`Proj ${id}`}</div>
+              <div className="sn-tab-name">{p.name||"—"}</div>
+              <div className="sn-tab-price">
+                {p.price?`₹${p.price}Cr`:"not set"}{p.luxIndex?` LI${p.luxIndex}`:""}
+              </div>
+            </div>
+          ))}
+          <button className="sn-calc-btn" onClick={run}>Calc →</button>
+        </div>
+      </div>
+
+      <div style={{padding:"18px 16px 16px"}}>
+        <div style={{display:"flex", alignItems:"center", gap:10, marginBottom:16}}>
+          <div style={{background:G, color:"#000", borderRadius:6, width:26, height:26,
+            display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:700}}>{tab}</div>
+          <div style={{fontSize:15, fontWeight:600, color:txt}}>Project {tab}</div>
+          <div style={{fontSize:13, color:dim}}>· then switch to Project {tab==="A"?"B":"A"}</div>
+        </div>
+
+        {tab==="A"?<ProjectForm key="A" p={A} set={setA} id="A"/>
+                  :<ProjectForm key="B" p={B} set={setB} id="B"/>}
+
+        <div style={{marginTop:18, padding:"14px 16px", background:s1,
+          border:`1px solid ${bd}`, borderRadius:10,
+          display:"flex", justifyContent:"space-between", alignItems:"center", gap:12}}>
+          <div style={{fontSize:14, color:muted}}>
+            {tab==="A"?"Done? Fill in Project B.":"Both done? Hit Calculate."}
+          </div>
+          {tab==="A"
+            ?<button onClick={()=>setTab("B")} style={{background:s2, border:`1px solid ${bd}`,
+                borderRadius:8, padding:"8px 16px", color:txt, fontSize:14, fontWeight:600,
+                fontFamily:"inherit", cursor:"pointer"}}>Project B →</button>
+            :<button onClick={run} style={{background:G, border:"none", borderRadius:8,
+                padding:"8px 16px", color:"#000", fontSize:14, fontWeight:700,
+                fontFamily:"inherit", cursor:"pointer"}}>Calculate →</button>}
+        </div>
+
+        {err&&<div style={{marginTop:12, padding:"12px 16px", background:"#2A0A0A",
+          border:`1px solid ${red}`, borderRadius:8, fontSize:14, color:red}}>{err}</div>}
+      </div>
+
+      {result&&(
+        <div id="res" style={{padding:"0 16px 48px", maxWidth:1200, margin:"0 auto"}}>
+          <div style={{borderTop:`1px solid ${s3}`, paddingTop:28, marginBottom:24, textAlign:"center"}}>
+            <div style={{fontSize:12, color:dim, letterSpacing:2, textTransform:"uppercase", marginBottom:8}}>4-Year True Cost Verdict</div>
+            <div style={{fontFamily:"'Cormorant Garamond',serif", fontSize:30, fontWeight:600, color:G, lineHeight:1.3}}>
+              {winnerName} costs ₹{saving.toFixed(1)}L less over 4 years
+            </div>
+            <div style={{fontSize:14, color:muted, marginTop:8}}>After quality normalisation, pre-EMI, delay and rental income</div>
+          </div>
+
+          <NormPanel norm={result.norm} rA={result.rA} rB={result.rB}/>
+          <CostBar norm={result.norm}/>
+
+          <div style={{display:"flex", gap:16, marginBottom:20, flexWrap:"wrap"}}>
+            <ResultCard r={result.rA} norm={result.norm} isWinner={result.norm.winner==="A"}/>
+            <ResultCard r={result.rB} norm={result.norm} isWinner={result.norm.winner==="B"}/>
+          </div>
+
+          <div style={{fontSize:12, color:dim, textAlign:"center", lineHeight:1.9}}>
+            All-inclusive price = base + floor rise + PLC + parking + GST + registration ·
+            Normalisation = 50% of LI gap, max 15% · Pre-EMI on actual disbursement ·
+            Delay on 90% of loan · Rental from possession over 48-month window · Indicative only
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
