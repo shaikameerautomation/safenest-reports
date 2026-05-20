@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeNest · Prestige Golden Grove vs Zuari Gangothri Tribhuja Phase 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font:       'DM Sans', -apple-system, sans-serif;
+      --font-d:     'DM Serif Display', Georgia, serif;
+      --font-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+      --bg:         #F5F5F7;
+      --card:       #FFFFFF;
+      --row-alt:    #FAFAFA;
+      --mob-lbl:    #F0F0F5;
+      --sep:        #E2E2E6;
+      --dark:       #1D1D1F;
+      --text:       #1D1D1F;
+      --sub:        #6E6E73;
+      --fine:       #86868B;
+      --rev:        #F5F5F7;
+      --a:          #0A7C6E;
+      --b:          #5856D6;
+      --a-light:    #E6F4F2;
+      --b-light:    #EEEEFF;
+      --spec-yes:   #22C55E;
+      --spec-no:    #EF4444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      min-width: 320px;
+      padding-top:    env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left:   env(safe-area-inset-left);
+      padding-right:  env(safe-area-inset-right);
+    }
+
+    /* ── HERO ── */
+    .hero { background: var(--dark); padding: 32px 16px 28px; }
+    .hero-inner { max-width: 960px; margin: 0 auto; }
+    .hero-label {
+      font-size: 11px; font-weight: 500;
+      color: rgba(245,245,247,0.55);
+      letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .hero-title {
+      font-family: var(--font-d); font-size: 32px;
+      color: var(--rev); line-height: 1.2; margin-bottom: 24px;
+    }
+    .hero-stat-bar {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;
+    }
+    .hero-stat-col { padding-right: 24px; }
+    .hero-stat-col:last-child {
+      padding-right: 0; padding-left: 24px;
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-proj-name {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--rev); margin-bottom: 4px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-a { background: var(--a); }
+    .dot-b { background: var(--b); }
+    .hero-seg-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(245,245,247,0.5); margin-bottom: 12px; padding-left: 16px;
+    }
+    .hero-stat-row { display: flex; flex-direction: column; margin-bottom: 8px; }
+    .hero-stat-label { font-size: 11px; font-weight: 400; color: rgba(245,245,247,0.6); line-height: 1.3; }
+    .hero-stat-value { font-size: 16px; font-weight: 600; color: var(--rev); line-height: 1.3; }
+
+    /* ── STICKY BAR ── */
+    .sticky-wrap {
+      position: sticky;
+      top: env(safe-area-inset-top);
+      z-index: 100; background: var(--dark);
+      will-change: transform;
+    }
+    .proj-bar {
+      display: grid; grid-template-columns: 1fr 1fr;
+      max-width: 960px; margin: 0 auto; padding: 10px 16px; gap: 16px;
+    }
+    .proj-cell { display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .proj-name {
+      font-size: 12px; font-weight: 600; color: var(--rev);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .proj-seg-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+      color: rgba(245,245,247,0.45); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px; padding: 1px 7px; white-space: nowrap; flex-shrink: 0;
+    }
+    .jump-bar {
+      overflow-x: auto; scrollbar-width: none; padding: 8px 12px;
+      border-top: 1px solid rgba(255,255,255,0.06); -webkit-overflow-scrolling: touch;
+    }
+    .jump-bar::-webkit-scrollbar { display: none; }
+    .jump-inner { display: flex; gap: 6px; max-width: 960px; margin: 0 auto; }
+    .jump-pill {
+      flex-shrink: 0; font-size: 11px; font-weight: 600;
+      color: rgba(245,245,247,0.65); border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 20px; padding: 4px 12px; text-decoration: none; white-space: nowrap;
+      transition: color 0.15s, background 0.15s;
+    }
+    .jump-pill:hover { color: var(--rev); background: rgba(255,255,255,0.08); }
+    .jump-pill.pill-active {
+      color: #F5F5F7; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4);
+    }
+
+    /* ── CONTENT ── */
+    .content-wrap { max-width: 960px; margin: 0 auto; padding: 16px; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card); border: 1px solid var(--sep);
+      border-radius: 16px; overflow: hidden; margin-bottom: 16px;
+    }
+    .card-header {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.11em; text-transform: uppercase;
+      color: #FFFFFF; background: var(--a); padding: 10px 16px;
+    }
+
+    /* ── COLGROUP WIDTH CLASSES (overrideable via CSS, unlike inline style=) ── */
+    col.col-lbl      { width: 30%; }
+    col.col-a        { width: 35%; }
+    col.col-b        { width: 35%; }
+    col.col-spec-lbl { width: 40%; }
+    col.col-spec-a   { width: 30%; }
+    col.col-spec-b   { width: 30%; }
+
+    /* ── COMPARISON TABLE ── */
+    .cmp-table {
+      width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed;
+    }
+    .sec-hdr-row td {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.11em; text-transform: uppercase;
+      color: #FFFFFF; background: var(--a); padding: 10px 16px;
+    }
+
+    /* v2.7: mobile-proj-hdr — hidden on desktop, shown once per section on mobile */
+    .mobile-proj-hdr { display: none; }
+    .mobile-proj-a, .mobile-proj-b {
+      width: 50%;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      padding: 6px 12px 4px;
+      background: #FFFFFF;
+    }
+    .mobile-proj-a { color: var(--a); }
+    .mobile-proj-b { color: var(--b); }
+
+    /* mobile-label-row: full-width field label on mobile */
+    .mobile-label-row { display: none; }
+    .mobile-label-row td {
+      font-size: 12px; font-weight: 600; color: var(--sub);
+      background: var(--mob-lbl); padding: 7px 12px; letter-spacing: 0.03em;
+    }
+
+    .field-label-cell {
+      font-size: 13px; font-weight: 500; color: var(--sub); padding: 12px 16px; vertical-align: top;
+    }
+    .val-cell {
+      font-size: 14px; font-weight: 400; color: var(--text); padding: 12px 16px; vertical-align: top;
+    }
+    .val-a { border-left: 3px solid var(--a); }
+    .val-b { border-left: 3px solid var(--b); }
+
+    tr.row-odd  td { background: #FFFFFF; }
+    tr.row-even td { background: var(--row-alt); }
+
+    .field-row td { border-bottom: 1px solid var(--sep); }
+    .field-row:last-child td { border-bottom: none; }
+
+    /* Winner badges — always block */
+    .win-badge {
+      display: block; margin-top: 6px; margin-left: 0;
+      background: var(--a-light); color: var(--a);
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 4px; width: fit-content;
+    }
+    .win-badge-b { background: var(--b-light); color: var(--b); }
+
+    /* Size lines — never use <br> */
+    .size-line { display: block; line-height: 1.5; }
+
+    /* Location badge */
+    .loc-badge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      border-radius: 4px; padding: 2px 7px; margin-top: 3px;
+    }
+    .loc-badge-a { background: var(--a-light); color: var(--a); }
+    .loc-badge-b { background: var(--b-light); color: var(--b); }
+
+    /* ── SPEC MATRIX ── */
+    .spec-table {
+      width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed;
+    }
+    /* v2.5+: spec-hdr-row stays visible on mobile */
+    .spec-hdr-row td {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--sub); padding: 10px 16px; background: #FFFFFF; border-bottom: 1px solid var(--sep);
+    }
+    .spec-hdr-a { color: var(--a) !important; }
+    .spec-hdr-b { color: var(--b) !important; }
+    .spec-group-hdr td {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--fine); background: #F5F5F7; padding: 7px 16px; border-bottom: 1px solid var(--sep);
+    }
+    .spec-mobile-label-row { display: none; }
+    .spec-mobile-label-row td {
+      font-size: 12px; font-weight: 600; color: var(--sub); background: var(--mob-lbl); padding: 7px 12px;
+    }
+    .spec-row td { padding: 10px 16px; border-bottom: 1px solid var(--sep); vertical-align: top; }
+    .spec-row:last-child td { border-bottom: none; }
+    .spec-label-cell { font-size: 13px; font-weight: 500; color: var(--text); }
+    .spec-yes, .spec-no { text-align: center; }
+    /* Ticks — HTML span with emoji font. Never CSS ::before */
+    .spec-tick { font-family: var(--font-emoji); font-size: 16px; font-weight: 700; display: block; }
+    .spec-yes .spec-tick { color: var(--spec-yes); }
+    .spec-no  .spec-tick { color: var(--spec-no); }
+    .spec-detail { font-size: 11px; color: var(--fine); margin-top: 2px; display: block; text-align: left; }
+    tr.spec-row.row-odd  td { background: #FFFFFF; }
+    tr.spec-row.row-even td { background: var(--row-alt); }
+
+    /* ── WHY BUY HERE ── */
+    .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .proj-col { padding: 20px; }
+    .proj-col + .proj-col { border-left: 1px solid var(--sep); }
+    .col-proj-label { font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 14px; }
+    .col-label-a { color: var(--a); }
+    .col-label-b { color: var(--b); }
+    .why-buy-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; line-height: 1.6; }
+    .why-buy-item:last-child { margin-bottom: 0; }
+    .why-tick-a { color: var(--a); font-family: var(--font-emoji); font-size: 16px; font-weight: 700; flex-shrink: 0; line-height: 1.5; }
+    .why-tick-b { color: var(--b); font-family: var(--font-emoji); font-size: 16px; font-weight: 700; flex-shrink: 0; line-height: 1.5; }
+    .why-text { font-size: 14px; font-weight: 500; color: var(--text); }
+
+    /* ── CTA ── */
+    .cta-card .card-header { background: var(--dark); }
+    .cta-body { padding: 20px; }
+    .cta-intro { font-size: 14px; color: var(--sub); margin-bottom: 16px; }
+    .cta-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+    .cta-btn {
+      display: inline-block; font-size: 13px; font-weight: 600;
+      color: #FFFFFF; text-decoration: none; border-radius: 10px; padding: 10px 20px;
+      transition: opacity 0.15s;
+    }
+    .cta-btn:hover { opacity: 0.88; }
+    .cta-btn-a { background: var(--a); }
+    .cta-btn-b { background: var(--b); }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer-footer { font-size: 11px; color: var(--fine); line-height: 1.7; padding: 16px 20px; }
+
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      .jump-pill { transition: none; }
+      .cta-btn   { transition: none; }
+    }
+
+    /* ── MOBILE ≤768px ── */
+    @media (max-width: 768px) {
+
+      .hero-title { font-size: 24px; }
+
+      /* ── COMPARISON TABLE: full block reflow ──
+         Converting the entire table chain to block/flex display removes the colgroup
+         from the equation entirely. colgroup widths only apply inside display:table
+         layout — once the table is display:block they have zero effect. */
+      .cmp-table,
+      .cmp-table thead,
+      .cmp-table tbody,
+      .cmp-table tr {
+        display: block !important;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Section header spans full width */
+      .sec-hdr-row { display: block !important; }
+      .sec-hdr-row td { display: block !important; width: 100%; box-sizing: border-box; }
+
+      /* mobile-label-row: full-width label block */
+      .mobile-label-row { display: block !important; }
+      .mobile-label-row td { display: block !important; width: 100%; box-sizing: border-box; }
+
+
+
+      /* mobile-proj-hdr and field-row: flex 50/50.
+         Prefixed with .cmp-table so specificity (0,2,1) beats
+         .cmp-table tr (0,1,1) which sets display:block on all tr elements. */
+      .cmp-table tr.mobile-proj-hdr,
+      .cmp-table tr.field-row {
+        display: flex !important;
+        width: 100%;
+      }
+      .cmp-table tr.mobile-proj-hdr .mobile-proj-a,
+      .cmp-table tr.mobile-proj-hdr .mobile-proj-b {
+        flex: 1 1 50%;
+        width: 50% !important;
+        box-sizing: border-box;
+      }
+      .cmp-table tr.field-row .field-label-cell {
+        display: none !important;
+        flex: 0 0 0 !important;
+        width: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+      .cmp-table tr.field-row .val-cell {
+        flex: 1 1 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+        min-width: 0;
+        padding: 10px 12px;
+        font-size: 13px;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+      }
+
+      /* v2.7: no val-cell::before micro-captions */
+      .val-cell::before { display: none !important; content: none !important; }
+      .val-nv { display: inline-block; width: 100%; box-sizing: border-box; }
+      .win-badge, .win-badge-b { width: fit-content; }
+
+      /* ── SPEC TABLE: same block reflow ── */
+      .spec-table,
+      .spec-table thead,
+      .spec-table tbody,
+      .spec-table tr {
+        display: block !important;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Spec mobile label row: full-width */
+      .spec-mobile-label-row { display: block !important; }
+      .spec-mobile-label-row td { display: block !important; width: 100%; box-sizing: border-box; }
+
+      /* Spec data row: flex 50/50.
+         Prefixed with .spec-table so specificity (0,2,1) beats
+         .spec-table tr (0,1,1). Same pattern as cmp-table fix above. */
+      .spec-table tr.spec-row {
+        display: flex !important;
+        width: 100%;
+      }
+      .spec-table tr.spec-row .spec-label-cell {
+        display: none !important;
+        flex: 0 0 0 !important;
+        width: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+      .spec-table tr.spec-row .spec-yes,
+      .spec-table tr.spec-row .spec-no {
+        flex: 1 1 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+        text-align: center;
+        padding: 10px 8px;
+        box-sizing: border-box;
+      }
+
+      /* spec-hdr-row: same specificity fix */
+      .spec-table tr.spec-hdr-row {
+        display: flex !important;
+        width: 100%;
+      }
+      .spec-table tr.spec-hdr-row .spec-hdr-label { display: none !important; }
+      .spec-table tr.spec-hdr-row .spec-hdr-a,
+      .spec-table tr.spec-hdr-row .spec-hdr-b {
+        flex: 1 1 50% !important;
+        width: 50% !important;
+        font-size: 10px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.07em; padding: 8px 10px; text-align: center;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        box-sizing: border-box;
+      }
+      .spec-table tr.spec-hdr-row .spec-hdr-a { color: var(--a); }
+      .spec-table tr.spec-hdr-row .spec-hdr-b { color: var(--b); }
+
+      /* Spec group header: full-width block */
+      .spec-group-hdr { display: block !important; }
+      .spec-group-hdr td { display: block !important; width: 100%; box-sizing: border-box; }
+
+      /* No per-row micro-captions on spec matrix */
+      .spec-yes::before, .spec-no::before { content: none !important; display: none !important; }
+      .spec-detail { display: none; }
+
+      /* Why Buy Here */
+      .two-col-grid { grid-template-columns: 1fr; }
+      .proj-col + .proj-col { border-left: none; border-top: 1px solid var(--sep); }
+    }
+
+    /* ── MOBILE ≤400px ── */
+    @media (max-width: 400px) {
+      .proj-seg-badge { display: none; }
+      .cta-btn { font-size: 12px; }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      @page { size: A4 landscape; margin: 12mm; }
+      .sticky-wrap { position: static; background: #FFFFFF; }
+      .proj-bar, .jump-bar { background: #FFFFFF; }
+      .proj-name { color: #1D1D1F; }
+      .jump-bar { display: none; }
+      .hero { background: #FFFFFF; padding: 0 0 16px 0; }
+      .hero-title { color: #1D1D1F; font-size: 24px; }
+      .hero-label { color: #6E6E73; }
+      .hero-proj-name { color: #1D1D1F; }
+      .hero-stat-value { color: #1D1D1F; }
+      .hero-stat-label { color: #6E6E73; }
+      .hero-seg-badge { color: #6E6E73; }
+      .hero-stat-bar { border-top: 1px solid #E2E2E6; }
+      .hero-stat-col:last-child { border-left: 1px solid #E2E2E6; }
+      /* Restore table display — undoes the mobile block reflow */
+      .cmp-table  { display: table !important; table-layout: fixed !important; }
+      .spec-table { display: table !important; table-layout: fixed !important; }
+      .cmp-table thead, .cmp-table tbody,
+      .spec-table thead, .spec-table tbody { display: table-row-group !important; }
+      .cmp-table tr, .spec-table tr { display: table-row !important; }
+      .sec-hdr-row, .sec-hdr-row td { display: table-row !important; }
+      .sec-hdr-row td { display: table-cell !important; }
+      .spec-hdr-row { display: table-row !important; }
+      .spec-hdr-row td { display: table-cell !important; }
+      .spec-group-hdr { display: table-row !important; }
+      .spec-group-hdr td { display: table-cell !important; }
+      .spec-yes, .spec-no { display: table-cell !important; }
+
+      .mobile-label-row { display: none !important; }
+      .mobile-proj-hdr  { display: none !important; }
+      .spec-mobile-label-row { display: none !important; }
+      .field-label-cell { display: table-cell !important; }
+      .spec-label-cell  { display: table-cell !important; }
+      .val-cell { display: table-cell !important; width: 35% !important; flex: none !important; }
+      .val-cell::before { display: none; }
+      .spec-yes::before, .spec-no::before { display: none; }
+      .spec-yes::after { content: " Yes"; font-size: 10px; color: #1D1D1F; }
+      .spec-no::after  { content: " No";  font-size: 10px; color: #1D1D1F; }
+      .spec-detail { display: block !important; }
+      tr    { page-break-inside: avoid; break-inside: avoid; }
+      .card { page-break-inside: avoid; break-inside: avoid; }
+      .cta-card { display: none; }
+      body { background: #FFFFFF; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">SafeNest &middot; Comparison Report &middot; Hyderabad</div>
+    <h1 class="hero-title">Prestige Golden Grove vs Zuari Gangothri Tribhuja Phase&nbsp;1</h1>
+    <div class="hero-stat-bar">
+
+      <div class="hero-stat-col">
+        <div class="hero-proj-name"><span class="dot dot-a"></span>Prestige Golden Grove</div>
+        <div class="hero-seg-badge">Luxury</div>
+        <!-- price_min is manually overridden confirmed value — show it.
+             Hero abbreviated format per spec. -->
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">From</span>
+          <span class="hero-stat-value">Pricing details being confirmed</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Configurations</span>
+          <span class="hero-stat-value">2 BHK, 3 BHK, 4 BHK</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Handover</span>
+          <span class="hero-stat-value">58 months</span>
+        </div>
+      </div>
+
+      <div class="hero-stat-col">
+        <div class="hero-proj-name"><span class="dot dot-b"></span>Zuari Gangothri Tribhuja Phase 1</div>
+        <div class="hero-seg-badge">Luxury</div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">From</span>
+          <span class="hero-stat-value">&#8377;1.30 &#8211; 2.38 Cr</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Configurations</span>
+          <span class="hero-stat-value">3 BHK, 4 BHK</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Handover</span>
+          <span class="hero-stat-value">36 months</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STICKY BAR ═══ -->
+<div class="sticky-wrap">
+  <div class="proj-bar">
+    <div class="proj-cell">
+      <span class="dot dot-a"></span>
+      <span class="proj-name">Prestige Golden Grove</span>
+      <span class="proj-seg-badge">Luxury</span>
+    </div>
+    <div class="proj-cell">
+      <span class="dot dot-b"></span>
+      <span class="proj-name">Zuari Gangothri Tribhuja Phase 1</span>
+      <span class="proj-seg-badge">Luxury</span>
+    </div>
+  </div>
+  <nav class="jump-bar" role="navigation" aria-label="Section navigation">
+    <div class="jump-inner">
+      <a class="jump-pill" href="#identity">Identity</a>
+      <a class="jump-pill" href="#pricing">Pricing</a>
+      <a class="jump-pill" href="#units">Units</a>
+      <a class="jump-pill" href="#metrics">Metrics</a>
+      <a class="jump-pill" href="#specs">Specs</a>
+      <a class="jump-pill" href="#whybuy">Why Buy Here</a>
+    </div>
+  </nav>
+</div>
+
+<!-- ═══ CONTENT ═══ -->
+<div class="content-wrap">
+
+  <!-- ── IDENTITY ── -->
+  <div class="card" id="identity">
+    <table class="cmp-table">
+      <colgroup><col class="col-lbl"><col class="col-a"><col class="col-b"></colgroup>
+      <thead>
+        <tr class="sec-hdr-row"><td colspan="3">Project Identity</td></tr>
+      </thead>
+      <tbody>
+        <!-- v2.7: mobile-proj-hdr immediately after sec-hdr-row in tbody -->
+        <tr class="mobile-proj-hdr">
+          <td class="mobile-proj-a">Prestige Golden Grove</td>
+          <td class="mobile-proj-b">Zuari Gangothri Tribhuja Phase 1</td>
+        </tr>
+
+        <!-- Location — different localities -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Location</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Location</td>
+          <td class="val-cell val-a"><span class="loc-badge loc-badge-a">Tellapur</span></td>
+          <td class="val-cell val-b"><span class="loc-badge loc-badge-b">Kollur</span></td>
+        </tr>
+
+        <!-- Handover — Zuari wins (36 < 58, both numeric) -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Handover</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Handover</td>
+          <td class="val-cell val-a">58 months</td>
+          <td class="val-cell val-b">36 months<span class="win-badge win-badge-b">Earlier delivery</span></td>
+        </tr>
+
+        <!-- Construction Stage — no badge -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Construction Stage</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Construction Stage</td>
+          <td class="val-cell val-a">Foundation Stage</td>
+          <td class="val-cell val-b">Foundation Stage</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── PRICING ── -->
+  <div class="card" id="pricing">
+    <table class="cmp-table">
+      <colgroup><col class="col-lbl"><col class="col-a"><col class="col-b"></colgroup>
+      <thead>
+        <tr class="sec-hdr-row"><td colspan="3">Pricing</td></tr>
+      </thead>
+      <tbody>
+        <tr class="mobile-proj-hdr">
+          <td class="mobile-proj-a">Prestige Golden Grove</td>
+          <td class="mobile-proj-b">Zuari Gangothri Tribhuja Phase 1</td>
+        </tr>
+
+        <!-- Starting Price — Prestige is manually confirmed value, no NV treatment.
+             No winner badge: Prestige price was manually set from a price sheet,
+             not a calculated base+amenity — not reliably comparable. -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Starting Price</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Starting Price</td>
+          <td class="val-cell val-a">&#8377;0.93 Cr (base + amenities)</td>
+          <td class="val-cell val-b">&#8377;1.30 Cr (base + amenities)</td>
+        </tr>
+
+        <!-- Max Price -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Maximum Price</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Maximum Price</td>
+          <td class="val-cell val-a">&#8377;2.39 Cr (base + amenities)</td>
+          <td class="val-cell val-b">&#8377;2.38 Cr (base + amenities)</td>
+        </tr>
+
+        <!-- Base Price/Sqft — Prestige is DETAILS_TO_BE_CONFIRMED → Information not available.
+             No badge (one value is pending constant). -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Base Price / Sqft</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Base Price / Sqft</td>
+          <td class="val-cell val-a">Information not available</td>
+          <td class="val-cell val-b">&#8377;7,499</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── UNIT CONFIGURATION ── -->
+  <div class="card" id="units">
+    <table class="cmp-table">
+      <colgroup><col class="col-lbl"><col class="col-a"><col class="col-b"></colgroup>
+      <thead>
+        <tr class="sec-hdr-row"><td colspan="3">Unit Configuration</td></tr>
+      </thead>
+      <tbody>
+        <tr class="mobile-proj-hdr">
+          <td class="mobile-proj-a">Prestige Golden Grove</td>
+          <td class="mobile-proj-b">Zuari Gangothri Tribhuja Phase 1</td>
+        </tr>
+
+        <!-- BHK — no badge (preference varies) -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">BHK Configurations</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">BHK Configurations</td>
+          <td class="val-cell val-a">2 BHK, 3 BHK, 4 BHK</td>
+          <td class="val-cell val-b">3 BHK, 4 BHK</td>
+        </tr>
+
+        <!-- Unit Sizes — no badge (preference varies) -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Unit Sizes (sqft)</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Unit Sizes (sqft)</td>
+          <td class="val-cell val-a">
+            <span class="size-line">2 BHK (Classic): 1,169 / 1,176 / 1,278 / 1,281</span>
+            <span class="size-line">3 BHK (Aspire): 1,516 / 1,519 / 1,644 / 1,646 / 1,648</span>
+            <span class="size-line">3 BHK (Premia): 1,837 / 1,839 / 1,840 / 2,002 / 2,004 / 2,005 / 2,009 / 2,148 / 2,157 / 2,162</span>
+            <span class="size-line">3 BHK+Study (Ultima): 2,462</span>
+            <span class="size-line">4 BHK (Supreme): 2,723 / 2,728</span>
+            <span class="size-line">4 BHK+Staff (Ultima): 2,900 / 3,013</span>
+          </td>
+          <td class="val-cell val-b">
+            <span class="size-line">3 BHK: 1,677 / 1,679 / 1,693 / 1,776 / 2,096 / 2,112 / 2,289 / 2,314</span>
+            <span class="size-line">4 BHK: 3,125 / 3,126</span>
+          </td>
+        </tr>
+
+        <!-- Total Units — lifestyle badge both -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Total Units</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Total Units</td>
+          <td class="val-cell val-a">5,120<span class="win-badge">Larger community</span></td>
+          <td class="val-cell val-b">678<span class="win-badge win-badge-b">Smaller community</span></td>
+        </tr>
+
+        <!-- Land Area — Prestige is NV per old schema (treated as confirmed but pending in v2.7 context).
+             land_area_acres = "28.6" (a string value, not a pending constant) — render as-is, no badge
+             since Prestige land_area_nv flag indicates it is still being confirmed. Under v2.7 we render
+             the stored value as-is. No pending constant present so render value. No badge — not in
+             eligibility table. -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Land Area</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Land Area</td>
+          <td class="val-cell val-a">28.6 acres</td>
+          <td class="val-cell val-b">9.17 acres</td>
+        </tr>
+
+        <!-- Clubhouse Area — Prestige is DETAILS_TO_BE_CONFIRMED → Information not available.
+             Zuari gets badge (Prestige is pending constant — badge suppressed on Prestige,
+             but Zuari still gets the badge as it is the only confirmed value). -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Clubhouse Area</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Clubhouse Area</td>
+          <td class="val-cell val-a">Information not available</td>
+          <td class="val-cell val-b">78,685 sqft<span class="win-badge win-badge-b">Larger clubhouse</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── CALCULATED METRICS ── -->
+  <div class="card" id="metrics">
+    <table class="cmp-table">
+      <colgroup><col class="col-lbl"><col class="col-a"><col class="col-b"></colgroup>
+      <thead>
+        <tr class="sec-hdr-row"><td colspan="3">Calculated Metrics</td></tr>
+      </thead>
+      <tbody>
+        <tr class="mobile-proj-hdr">
+          <td class="mobile-proj-a">Prestige Golden Grove</td>
+          <td class="mobile-proj-b">Zuari Gangothri Tribhuja Phase 1</td>
+        </tr>
+
+        <!-- Clubhouse/Unit — Prestige DETAILS_TO_BE_CONFIRMED → pending → Information not available. Badge suppressed on Prestige. -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Clubhouse Area / Unit</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Clubhouse Area / Unit</td>
+          <td class="val-cell val-a">Information not available</td>
+          <td class="val-cell val-b">116.1 sqft / unit<span class="win-badge win-badge-b">More space per unit</span></td>
+        </tr>
+
+        <!-- Density — Prestige density_units_per_acre = "179.0" (confirmed but NV-flagged in old schema).
+             Under v2.7 there is no pending constant — value is "179.0", render as-is.
+             Zuari = 180 (developer confirmed this session). Both values present and numeric.
+             Lower = less crowded → Prestige 179 < Zuari 180 → Prestige wins "Lower density". -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Density (Units / Acre)</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Density (Units / Acre)</td>
+          <td class="val-cell val-a">179.0 units / acre<span class="win-badge">Lower density</span></td>
+          <td class="val-cell val-b">180 units / acre</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── PHYSICAL SPECIFICATIONS ── -->
+  <div class="card" id="specs">
+    <table class="cmp-table">
+      <colgroup><col class="col-lbl"><col class="col-a"><col class="col-b"></colgroup>
+      <thead>
+        <tr class="sec-hdr-row"><td colspan="3">Physical Specifications</td></tr>
+      </thead>
+      <tbody>
+        <tr class="mobile-proj-hdr">
+          <td class="mobile-proj-a">Prestige Golden Grove</td>
+          <td class="mobile-proj-b">Zuari Gangothri Tribhuja Phase 1</td>
+        </tr>
+
+        <!-- Floor Count — no badge -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Floor Count</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Floor Count</td>
+          <td class="val-cell val-a">2 Basements + 3 Podium + 52 Upper Floors</td>
+          <td class="val-cell val-b">4 Cellars + Ground + 37 Upper Floors</td>
+        </tr>
+
+        <!-- Units Per Floor — no badge -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Units Per Floor</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Units Per Floor</td>
+          <td class="val-cell val-a">8</td>
+          <td class="val-cell val-b">6</td>
+        </tr>
+
+        <!-- Ceiling Height — Prestige DETAILS_TO_BE_CONFIRMED → Information not available. No badge. -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Ceiling Height</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Ceiling Height</td>
+          <td class="val-cell val-a">Information not available</td>
+          <td class="val-cell val-b">10.6 ft<span class="win-badge win-badge-b">Higher ceilings</span></td>
+        </tr>
+
+        <!-- Lobby Height — both DETAILS_TO_BE_CONFIRMED → both Information not available. No badge. -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Lobby Height</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Lobby Height</td>
+          <td class="val-cell val-a">Information not available</td>
+          <td class="val-cell val-b">Information not available</td>
+        </tr>
+
+        <!-- Corridor Width — Prestige DETAILS_TO_BE_CONFIRMED → Information not available. No badge. -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Corridor Width</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Corridor Width</td>
+          <td class="val-cell val-a">Information not available</td>
+          <td class="val-cell val-b">7.87 ft</td>
+        </tr>
+
+        <!-- Door Height — Prestige DETAILS_TO_BE_CONFIRMED → Information not available. No badge. -->
+        <tr class="mobile-label-row row-even"><td colspan="3">Door Height</td></tr>
+        <tr class="field-row row-even">
+          <td class="field-label-cell">Door Height</td>
+          <td class="val-cell val-a">Information not available</td>
+          <td class="val-cell val-b">8 ft</td>
+        </tr>
+
+        <!-- Spec Segment — no badge -->
+        <tr class="mobile-label-row row-odd"><td colspan="3">Specification Segment</td></tr>
+        <tr class="field-row row-odd">
+          <td class="field-label-cell">Specification Segment</td>
+          <td class="val-cell val-a">Luxury</td>
+          <td class="val-cell val-b">Luxury</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── SPECIFICATION MATRIX ── -->
+  <div class="card">
+    <div class="card-header">Specification Highlights</div>
+    <table class="spec-table">
+      <colgroup><col class="col-spec-lbl"><col class="col-spec-a"><col class="col-spec-b"></colgroup>
+      <thead>
+        <!-- v2.5+: header row stays visible on mobile.
+             v2.6: spec-hdr-label hidden on mobile so header is clean 2-column. -->
+        <tr class="spec-hdr-row">
+          <td class="spec-hdr-label"></td>
+          <td class="spec-hdr-a">Prestige Golden Grove</td>
+          <td class="spec-hdr-b">Zuari Gangothri Tribhuja Phase 1</td>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ── SHARED ── -->
+        <tr class="spec-group-hdr"><td colspan="3">Shared Features</td></tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Swimming Pool</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Swimming Pool</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Indoor pool with jacuzzi (Club Sapphire); Olympic-size outdoor pool with kids pool; family pool with deck</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Multi-pool complex — leisure, fitness, wading, infinity edge</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Kids Pool</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Kids Pool</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Kids pool as part of outdoor Olympic pool complex; toddler splash area</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Dedicated kids pool and wading pool</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Banquet Hall</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Banquet Hall</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Emerald</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Indoor Games Room</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Indoor Games Room</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Indoor game room and dedicated billiards room — Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Games room with billiards table</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Home Theatre</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Home Theatre</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Mini theatre — Club Emerald</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Mini Theatre in clubhouse</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Co-working Space</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Co-working Space</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Emerald</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Work station / work lounge in clubhouse</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Library / Reading Room</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Library / Reading Room</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Library room — Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Guest Suites</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Guest Suites</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Guest rooms — Club Emerald</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Gymnasium</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Gymnasium</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Gym and aerobics studios — Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Cross fit, yoga room and aerobics in addition to gym</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Squash Court</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Squash Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Badminton Court</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Badminton Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Basketball Court</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Basketball Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Half basketball court</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Skating Rink</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Skating Rink</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Yoga / Meditation Deck</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Yoga / Meditation Deck</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Yoga and Pilates rooms — Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Smart meditation deck outdoors and yoga multipurpose hall in clubhouse</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Jogging Track</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Jogging Track</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Broadway jogging track</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Table Tennis</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Table Tennis</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Volleyball Court</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Volleyball Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Mini Golf</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Mini Golf</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Putting green</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Cycling Track</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Cycling Track</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Amphitheatre</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Amphitheatre</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Open Air Theatre (OAT)</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Pet Park</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Pet Park</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Children&#39;s Play Area</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Children&#39;s Play Area</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor kids play area and toddler play area</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Kids play area and dedicated toddler park</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Senior Citizen Garden</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Senior Citizen Garden</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Senior citizen park — outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Senior citizen nook</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">BBQ and Dining Deck</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">BBQ and Dining Deck</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Terrace BBQ deck (Club Emerald) and outdoor BBQ and dining zone</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Alfresco picnic zone and dining deck</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Sensory Park</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Sensory Park</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Salon &amp; Spa</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Salon &amp; Spa</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">His and Her Spa — Club Sapphire</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Convenience Store</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Convenience Store</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Emerald</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Grocery store in clubhouse</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Caf&#233;</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Caf&#233;</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Emerald</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Caf&#233; lounge in clubhouse</span></td>
+        </tr>
+
+        <!-- ── PRESTIGE ONLY ── -->
+        <tr class="spec-group-hdr"><td colspan="3">Prestige Golden Grove Only</td></tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Pickleball Court</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Pickleball Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Indoor (Club Sapphire) and outdoor</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Tennis Court</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Tennis Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Cricket Practice Pitch</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Cricket Practice Pitch</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Multi-sport Court</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Multi-sport Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Multiuse games arena — outdoor</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Padel Court</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Padel Court</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Outdoor</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Hobby Room</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Hobby Room</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Sapphire</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Clinic and Pharmacy</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Clinic and Pharmacy</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Emerald</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Gallery Space</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Gallery Space</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Club Emerald</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Retail Shops</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Retail Shops</td>
+          <td class="spec-yes" data-proj="Prestige Golden Grove" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Shops — Club Emerald</span></td>
+          <td class="spec-no" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Not available"><span class="spec-tick">✗</span></td>
+        </tr>
+
+        <!-- ── ZUARI ONLY ── -->
+        <tr class="spec-group-hdr"><td colspan="3">Zuari Gangothri Tribhuja Phase 1 Only</td></tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Solar Energy System</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Solar Energy System</td>
+          <td class="spec-no" data-proj="Prestige Golden Grove" aria-label="Not available"><span class="spec-tick">✗</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Solar power utilisation and solar power fencing around compound</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">EV Charging</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">EV Charging</td>
+          <td class="spec-no" data-proj="Prestige Golden Grove" aria-label="Not available"><span class="spec-tick">✗</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Available at extra cost</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Rainwater Harvesting</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Rainwater Harvesting</td>
+          <td class="spec-no" data-proj="Prestige Golden Grove" aria-label="Not available"><span class="spec-tick">✗</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Rainwater harvesting pits at regular intervals as per approved plan</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Dual Piping System</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Dual Piping System</td>
+          <td class="spec-no" data-proj="Prestige Golden Grove" aria-label="Not available"><span class="spec-tick">✗</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span><span class="spec-detail">Treated sewage water used for landscaping and flushing</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Cr&#232;che</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Cr&#232;che</td>
+          <td class="spec-no" data-proj="Prestige Golden Grove" aria-label="Not available"><span class="spec-tick">✗</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-odd"><td colspan="3">Futsal Court</td></tr>
+        <tr class="spec-row row-odd">
+          <td class="spec-label-cell">Futsal Court</td>
+          <td class="spec-no" data-proj="Prestige Golden Grove" aria-label="Not available"><span class="spec-tick">✗</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+        <tr class="spec-mobile-label-row row-even"><td colspan="3">Trampoline Park</td></tr>
+        <tr class="spec-row row-even">
+          <td class="spec-label-cell">Trampoline Park</td>
+          <td class="spec-no" data-proj="Prestige Golden Grove" aria-label="Not available"><span class="spec-tick">✗</span></td>
+          <td class="spec-yes" data-proj="Zuari Gangothri Tribhuja Phase 1" aria-label="Available"><span class="spec-tick">✓</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── WHY BUY HERE ── -->
+  <div class="card" id="whybuy">
+    <div class="card-header">Why Buy Here — Top Reasons</div>
+    <div class="two-col-grid">
+      <div class="proj-col">
+        <div class="col-proj-label col-label-a">Prestige Golden Grove</div>
+        <div class="why-buy-item">
+          <span class="why-tick-a">✓</span>
+          <span class="why-text">Prestige Constructions is a listed company and one of the most reputed brands of Indian Realestate.</span>
+        </div>
+        <div class="why-buy-item">
+          <span class="why-tick-a">✓</span>
+          <span class="why-text">Direct ORR service road frontage — seamless access to Financial District and HITEC City in 10&#8211;15 minutes.</span>
+        </div>
+        <div class="why-buy-item">
+          <span class="why-tick-a">✓</span>
+          <span class="why-text">8-acre central green lung surrounded by 10 towers — one of the largest open landscapes in Tellapur&#39;s highrise segment.</span>
+        </div>
+      </div>
+      <div class="proj-col">
+        <div class="col-proj-label col-label-b">Zuari Gangothri Tribhuja Phase 1</div>
+        <div class="why-buy-item">
+          <span class="why-tick-b">✓</span>
+          <span class="why-text">8 feet corridor, all the doors at 8 feet, 10.6 feet height ceiling, 2 parkings per unit average, Double height lobby, makes the flat large, roomy and luxurious.</span>
+        </div>
+        <div class="why-buy-item">
+          <span class="why-tick-b">✓</span>
+          <span class="why-text">Direct ORR service road frontage — seamless access to Financial District and HITEC City in 10&#8211;15 minutes.</span>
+        </div>
+        <div class="why-buy-item">
+          <span class="why-tick-b">✓</span>
+          <span class="why-text">Infinity edge pool + multi-pool complex (leisure, fitness, wading, kids, wet lounge) — this project is fitness friendly.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CTA ── -->
+  <div class="card cta-card">
+    <div class="card-header">Ready to Visit?</div>
+    <div class="cta-body">
+      <p class="cta-intro">Speak with your SafeNest advisor to arrange a visit.</p>
+      <div class="cta-buttons">
+        <a class="cta-btn cta-btn-a"
+           href="https://wa.me/918639526660?text=Hi%2C%20I%20read%20the%20SafeNest%20report%20for%20Prestige%20Golden%20Grove%20vs%20Zuari%20Gangothri%20Tribhuja%20Phase%201.%20I%27d%20like%20to%20visit%20Prestige%20Golden%20Grove."
+           target="_blank" rel="noopener">Visit Prestige Golden Grove</a>
+        <a class="cta-btn cta-btn-b"
+           href="https://wa.me/918639526660?text=Hi%2C%20I%20read%20the%20SafeNest%20report%20for%20Prestige%20Golden%20Grove%20vs%20Zuari%20Gangothri%20Tribhuja%20Phase%201.%20I%27d%20like%20to%20visit%20Zuari%20Gangothri%20Tribhuja%20Phase%201."
+           target="_blank" rel="noopener">Visit Zuari Gangothri Tribhuja Phase 1</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DISCLAIMER ── -->
+  <div class="card">
+    <div class="disclaimer-footer">
+      This report is a shortlisting tool to help you decide which projects are worth a site visit.
+      It is not a due diligence document. All pricing is indicative — final pricing, availability,
+      and terms are confirmed at the site with the developer&#39;s sales team.
+      Specification matrix reflects features confirmed in project documents.
+      Additional features may be available — your advisor can provide a complete list.
+      SafeNest advisors are available to answer questions before and after your visit.
+      <br><br>
+      SafeNest &middot; Prestige Golden Grove vs Zuari Gangothri Tribhuja Phase 1 &middot; May 2026
+    </div>
+  </div>
+
+</div><!-- end content-wrap -->
+
+<script>
+(function() {
+  'use strict';
+  var stickyEl = document.querySelector('.sticky-wrap');
+  var sectionIds = ['identity','pricing','units','metrics','specs','whybuy'];
+  var pills = document.querySelectorAll('.jump-pill');
+  var observer = null;
+  var resizeTimer = null;
+  var isManualScroll = false;
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function getStickyHeight() { return stickyEl ? stickyEl.offsetHeight : 80; }
+
+  function setActivePill(id) {
+    pills.forEach(function(pill) {
+      pill.classList.toggle('pill-active', pill.getAttribute('href') === '#' + id);
+    });
+  }
+
+  function initObserver() {
+    if (observer) observer.disconnect();
+    var h = getStickyHeight();
+    observer = new IntersectionObserver(function(entries) {
+      var topEntry = null;
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          if (!topEntry || entry.boundingClientRect.top < topEntry.boundingClientRect.top) topEntry = entry;
+        }
+      });
+      if (topEntry) setActivePill(topEntry.target.id);
+    }, { rootMargin: '-' + h + 'px 0px 0px 0px', threshold: 0 });
+    sectionIds.forEach(function(id) { var el = document.getElementById(id); if (el) observer.observe(el); });
+  }
+
+  if (window.ResizeObserver && stickyEl) {
+    var ro = new ResizeObserver(function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initObserver, 100); });
+    ro.observe(stickyEl);
+  }
+
+  var fontTimer = setTimeout(initObserver, 3000);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() { clearTimeout(fontTimer); initObserver(); });
+  }
+
+  pills.forEach(function(pill) {
+    pill.addEventListener('click', function(e) {
+      e.preventDefault();
+      var href = this.getAttribute('href');
+      var target = document.getElementById(href.substring(1));
+      if (!target) return;
+      var h = getStickyHeight();
+      var top = target.getBoundingClientRect().top + window.scrollY - h;
+      isManualScroll = true;
+      window.scrollTo({ top: top, behavior: prefersReducedMotion ? 'instant' : 'smooth' });
+      history.pushState(null, null, href);
+      setTimeout(function() { isManualScroll = false; }, 300);
+    });
+    pill.addEventListener('focus', function() {
+      this.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    });
+  });
+
+  window.addEventListener('popstate', function() {
+    if (isManualScroll) return;
+    var hash = window.location.hash;
+    if (!hash) return;
+    var target = document.querySelector(hash);
+    if (!target) return;
+    var h = getStickyHeight();
+    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - h, behavior: prefersReducedMotion ? 'instant' : 'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>
